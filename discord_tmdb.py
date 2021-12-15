@@ -71,5 +71,5 @@ async def on_message(message):
         await message.channel.send(response_similar)
 
 
-client.run(TOKEN)
+#client.run(TOKEN)
 

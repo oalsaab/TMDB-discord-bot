@@ -10,6 +10,8 @@ load_dotenv()
 class BaseTMDB:
     
     def __init__(self):
+        """Initialize class with API token and TMDB API base url"""
+        
         self.base_url = 'https://api.themoviedb.org/3'
         self.key = os.getenv('TMDB_KEY')
     
@@ -19,6 +21,8 @@ class SearchTMDB(BaseTMDB):
         super().__init__()
     
     def search_movie(self, query):
+        """Method utilizing TMDB search feature. Returns a list."""
+
         self.query = query
         search = requests.get(f'{self.base_url}/search/movie', params={'api_key': self.key, 'query': self.query})
         exact = search.json()['results']
@@ -34,6 +38,7 @@ class SearchTMDB(BaseTMDB):
         return list_ids
         
     def similar_movie_by_search(self, id):
+        """Method to find similar movies to the one searched for. Returns a list"""
 
         similar = requests.get(f'{self.base_url}/movie/{str(id)}/similar', params={'api_key': self.key})
         match = similar.json()['results']
@@ -48,6 +53,7 @@ class DiscoverTMDB(BaseTMDB):
         super().__init__()
 
     def movie_genres(self):
+        """Method to get all of the availaible genres in TMDB and their associated ID. Returns list of genre names."""
 
         genres = requests.get(f'{self.base_url}/genre/movie/list', params={'api_key': self.key})
         genres_data = genres.json()['genres']
@@ -60,6 +66,8 @@ class DiscoverTMDB(BaseTMDB):
         return names_list
     
     def discover_movies(self, disc, sort_by_input):
+        """Method to discover movies by genre with option to sort results. Returns a list."""
+
         self.disc = disc
 
         self.sort_by_input = sort_by_input
@@ -76,8 +84,9 @@ class DiscoverTMDB(BaseTMDB):
                 'with_genres': self.genre_dicts[self.disc],
                 'sort_by': self.sort_by[self.sort_by_input]
             }
+        
         except KeyError:
-            return 'Please choose correct genre and sort method'
+            return 'Please choose a correct genre and/or sort method'
 
         discover = requests.get(f'{self.base_url}/discover/movie', params=full_params)
         discover_json = discover.json()['results']
@@ -86,7 +95,9 @@ class DiscoverTMDB(BaseTMDB):
 
         return self.discover_results
 
+
     def discover_random_genre(self):
+        """Method of choosing a random genre from list of genres and find movies associated with that genre"""
         
         genre, responses = random.choice(list(self.genre_dicts.items()))
 
@@ -100,6 +111,7 @@ class DiscoverTMDB(BaseTMDB):
         return [genre, discover_random_result]
     
     def discover_random_movies(self):
+        """Method of choosing a random page out of 500 pages of movie results and return list of movies in that page."""
 
         discover_random_mov = requests.get(f'{self.base_url}/discover/movie', params={'api_key': self.key, 'page': random.randint(1, 500)})
         discover_random_mov_json = discover_random_mov.json()['results']
@@ -107,7 +119,8 @@ class DiscoverTMDB(BaseTMDB):
         self.result_random_page = [i['title'] for i in discover_random_mov_json]
 
         return self.result_random_page
-    
+
+
 
 
 
