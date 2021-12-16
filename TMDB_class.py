@@ -69,7 +69,6 @@ class DiscoverTMDB(BaseTMDB):
         """Method to discover movies by genre with option to sort results. Returns a list."""
 
         self.disc = disc
-
         self.sort_by_input = sort_by_input
 
         self.sort_by = {
@@ -95,7 +94,6 @@ class DiscoverTMDB(BaseTMDB):
 
         return self.discover_results
 
-
     def discover_random_genre(self):
         """Method of choosing a random genre from list of genres and find movies associated with that genre"""
         
@@ -105,8 +103,6 @@ class DiscoverTMDB(BaseTMDB):
         discover_random_json = discover_random.json()['results']
         
         discover_random_result = [i['title'] for i in discover_random_json]
-
-        #dict_random = {genre: discover_random_result}
         
         return [genre, discover_random_result]
     
